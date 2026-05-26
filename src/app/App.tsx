@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { Home as HomeIcon, Activity, Trophy } from "lucide-react";
+import { Home as HomeIcon, Activity } from "lucide-react";
 import { Home } from "./components/cricket/Home";
 import { LiveScoring } from "./components/cricket/LiveScoring";
 import { Scorecard } from "./components/cricket/Scorecard";
 import { MatchResult } from "./components/cricket/MatchResult";
-import { PointsTable } from "./components/cricket/PointsTable";
 import { MatchSetupScreen } from "./components/cricket/MatchSetupScreen";
 import { RosterScreen } from "./components/cricket/RosterScreen";
 import { TossScreen } from "./components/cricket/TossScreen";
@@ -29,7 +28,6 @@ function Screen() {
     case "result": return <MatchResult />;
     case "scorecard": return <Scorecard />;
     case "settings": return <SettingsScreen />;
-    case "tournament": return <PointsTable />;
     case "help": return <HelpScreen />;
     default: return <Home />;
   }
@@ -44,7 +42,6 @@ function TabBar() {
   const tabs = [
     { key: "home", label: "Home", icon: HomeIcon, route: { name: "home" as const } },
     ...(hasActiveMatch ? [{ key: "live", label: "Scoring", icon: Activity, route: { name: "live" as const } }] : []),
-    { key: "tournament", label: "League", icon: Trophy, route: { name: "tournament" as const } },
   ];
   return (
     <div className="h-[64px] bg-card border-t border-border flex items-stretch px-1 select-none shrink-0 transition-colors duration-200">
@@ -69,9 +66,12 @@ function TabBar() {
 
 function Shell() {
   const { route } = useNav();
+  const { derivedState } = useMatch();
   
-  // Hide bottom tab navigation bar on setup and active scoring screens
-  const hideTabs = [
+  const hasActiveMatch = derivedState && derivedState.match && derivedState.match.state !== 'RESULT';
+
+  // Only show the tab bar if we have an active match AND we aren't inside setup/action flows
+  const showTabs = hasActiveMatch && ![
     "match_setup",
     "roster",
     "toss",
@@ -98,7 +98,7 @@ function Shell() {
       <div key={route.name} className="flex-1 min-h-0 flex flex-col animate-fade-in">
         <Screen />
       </div>
-      {!hideTabs && <TabBar />}
+      {showTabs && <TabBar />}
     </div>
   );
 }

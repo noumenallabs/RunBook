@@ -11,7 +11,6 @@ export type Route =
   | { name: "result" }
   | { name: "scorecard" }
   | { name: "settings" }
-  | { name: "tournament" }
   | { name: "help" };
 
 type Ctx = {
