@@ -117,6 +117,8 @@ export const SettingsScreen: React.FC = () => {
             </div>
             <button
               onClick={() => setHaptics(!haptics)}
+              aria-label="Toggle haptic feedback"
+              aria-pressed={haptics}
               className={`w-12 h-6 rounded-full p-0.5 transition-colors cursor-pointer ${
                 haptics ? 'bg-pitch-700 flex justify-end' : 'bg-ink-200 flex justify-start'
               }`}

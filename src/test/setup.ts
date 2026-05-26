@@ -1,6 +1,10 @@
 import '@testing-library/jest-dom';
-import { vi, beforeEach } from 'vitest';
+import { vi, beforeEach, expect } from 'vitest';
+import * as axeMatchers from 'vitest-axe/matchers';
+import 'vitest-axe/extend-expect';
 import { Match, ScorecardEvent } from '../engine/types';
+
+expect.extend(axeMatchers);
 
 // In-memory mock database for testing
 const matchesStore = new Map<string, Match>();
@@ -9,7 +13,7 @@ const eventsStore = new Map<string, Array<{ id: string; event: ScorecardEvent; t
 beforeEach(() => {
   matchesStore.clear();
   eventsStore.clear();
-  vi.clearAllMocks();
+  vi.restoreAllMocks();
 });
 
 // Mock the IndexedDB storage layer

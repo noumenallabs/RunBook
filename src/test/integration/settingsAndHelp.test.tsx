@@ -1,12 +1,13 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { axe } from "vitest-axe";
 import App from "../../app/App";
 
 describe("Cricket Scorer Integration - Settings and Help Center Journey", () => {
   it("should simulate preferences modification and help center interactive usage", async () => {
     const user = userEvent.setup();
-    render(<App />);
+    const { container } = render(<App />);
 
     // 1. Verify Home header buttons exist
     const settingsBtn = await screen.findByRole("button", { name: /Settings/i });
@@ -14,9 +15,17 @@ describe("Cricket Scorer Integration - Settings and Help Center Journey", () => 
     expect(settingsBtn).toBeInTheDocument();
     expect(helpBtn).toBeInTheDocument();
 
+    // Check Home Screen accessibility
+    const homeA11y = await axe(container);
+    expect(homeA11y).toHaveNoViolations();
+
     // 2. Open Help Center
     await user.click(helpBtn);
     await screen.findByText("RunBook Help Center");
+
+    // Check Help Center accessibility
+    const helpA11y = await axe(container);
+    expect(helpA11y).toHaveNoViolations();
 
     // Check default tab is "Quick Start"
     expect(screen.getByText("1. Create a Match")).toBeInTheDocument();
@@ -55,6 +64,10 @@ describe("Cricket Scorer Integration - Settings and Help Center Journey", () => 
     const settingsBtnReloaded = screen.getByRole("button", { name: /Settings/i });
     await user.click(settingsBtnReloaded);
     await screen.findByText("App Settings");
+
+    // Check Settings Screen accessibility
+    const settingsA11y = await axe(container);
+    expect(settingsA11y).toHaveNoViolations();
 
     // Toggle Theme settings (Click DARK)
     const darkThemeBtn = screen.getByRole("button", { name: /DARK/ });

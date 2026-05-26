@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import { Match, ScorecardEvent, MatchDerivedState } from '../engine/types';
 import { reduceMatchState } from '../engine/reducer';
 import { saveEvent, getEventsForMatch, saveMatchMetadata, getAllMatchesMetadata, getMatchMetadata, deleteMatch } from '../db/matchStore';
@@ -77,6 +78,7 @@ export const MatchProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
     } catch (e) {
       console.error('Failed to dispatch event', e);
+      toast.error('Failed to save match data: storage is full or unavailable.');
     }
   }, [activeMatchId, refreshRecentMatches]);
 
@@ -98,6 +100,7 @@ export const MatchProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       await refreshRecentMatches();
     } catch (e) {
       console.error('Failed to start new match', e);
+      toast.error('Failed to start match: storage is full or unavailable.');
     } finally {
       setIsLoading(false);
     }
@@ -133,6 +136,7 @@ export const MatchProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       await refreshRecentMatches();
     } catch (e) {
       console.error('Failed to delete match', e);
+      toast.error('Failed to delete match: storage is full or unavailable.');
     }
   }, [activeMatchId, refreshRecentMatches]);
 

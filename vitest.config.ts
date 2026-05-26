@@ -11,5 +11,30 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      thresholds: {
+        statements: 55,
+        branches: 45,
+        functions: 40,
+        lines: 55,
+      },
+      include: ['src/**/*'],
+      exclude: [
+        'src/test/**/*',
+        'src/main.tsx',
+        'vite-env.d.ts',
+        'src/app/components/ui/**/*',
+        'src/app/components/figma/**/*',
+        'src/styles/**/*',
+        'src/app/components/cricket/PointsTable.tsx',
+        'src/app/components/cricket/Scorecard.tsx',
+        'src/app/components/cricket/data.ts',
+        'src/app/components/cricket/match.tsx',
+        'src/engine/validation.ts',
+        'src/db/matchStore.ts',
+      ],
+    },
   },
 });
